@@ -16,9 +16,28 @@
   </style>
 </head>
 <body>
+  <%- include('_navbar') %>
   <section class="section">
     <div class="container">
-        <h1 class="title">Top Movies</h1>
+        <div class="level">
+          <div class="level-left">
+            <div class="level-item">
+              <h1 class="title">Top Movies</h1>
+            </div>
+          </div>
+          <div class="level-right">
+            <div class="level-item">
+              <a href="/addMovie">
+                <button class="button is-light is-fullwidth">
+                  <span class="icon is-small">
+                    <i class="fas fa-plus"></i>
+                  </span>
+                  <span>Add movie</span>
+                </button>
+              </a>
+            </div>
+          </div>
+        </div>
         <div class="columns is-multiline">
             <% movies.forEach(movie => { %>
               <div class="column is-one-third">
@@ -32,17 +51,26 @@
                     <div class="content">
                       <p class="title is-4"><%= movie.title %></p>
                       <p>
-                        <% movie.genre.forEach(genre => { %>
+                        <% (movie.genre ?? []).forEach(genre => { %>
                           <span class="tag is-dark"><%= genre %></span>
                         <% }) %>
                       </p>
                       <p><strong><%= movie.year %></strong></p>
-                      <p>
-                        <span class="icon">
-                          <i class="fas fa-star" style="color: #FFD43b"></i>
-                        </span>
-                        <strong>8.5/10</strong>
-                      </p>
+                      <% if (movie.rating) { %>
+                        <p>
+                          <span class="icon">
+                            <i class="fas fa-star" style="color: #FFD43b"></i>
+                          </span>
+                          <strong><%= movie.rating %></strong>
+                        </p>
+                      <% } else { %>
+                        <p>
+                          <span class="icon">
+                            <i class="far fa-star"></i>
+                          </span>
+                          <strong>No rating</strong>
+                        </p>
+                      <% } %>
                     </div>
                     <div class="columns">
                       <div class="column">

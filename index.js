@@ -100,15 +100,25 @@ app.post('/add', (req, res) => {
   const title = String(req.body.title);
   const director = String(req.body.director);
   const year = Number(req.body.year);
+  const genre = Array.isArray(req.body.genre) ? req.body.genre : [req.body.genre];
+  const rating = null;
 
   movies.push({
     id: id++,
     title,
     director,
     year,
+    genre,
+    rating
   });
 
   res.redirect('/');
+});
+
+app.get('/addMovie', (req, res) => {
+  res.render('addMovie', {
+    title: 'Add Movie',
+  });
 });
 
 app.listen(port, () => {
