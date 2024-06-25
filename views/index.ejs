@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" />
   <style>
     .card-content {
-        min-height: 200; /* Ensures consistent card height */
+        min-height: 200;
     }
   </style>
 </head>
@@ -43,19 +43,18 @@
               <div class="column is-one-third">
                 <div class="card movie-card">
                   <div class="card-image">
-                    <figure class="image is-3by4">
-                      <img src="https://via.placeholder.com/480x640" alt="Placeholder image">
+                    <figure class="image is-2by3">
+                      <img src="<%= movie.img %>" alt="Placeholder image">
                     </figure>
                   </div>
                   <div class="card-content">
                     <div class="content">
                       <p class="title is-4"><%= movie.title %></p>
                       <p>
-                        <% (movie.genre ?? []).forEach(genre => { %>
+                        <% (movie.genre ? movie.genre.split(', ') : []).forEach(genre => { %>
                           <span class="tag is-dark"><%= genre %></span>
                         <% }) %>
                       </p>
-                      <p><strong><%= movie.year %></strong></p>
                       <% if (movie.rating) { %>
                         <p>
                           <span class="icon">
@@ -71,6 +70,8 @@
                           <strong>No rating</strong>
                         </p>
                       <% } %>
+                      <p><strong><%= movie.year %></strong></p>
+                      <p><strong><%= movie.director %></strong></p>
                     </div>
                     <div class="columns">
                       <div class="column">

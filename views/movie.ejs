@@ -4,36 +4,43 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><%= title %></title>
-  <link
-  rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css"
-  >
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" />
   <style>
     .form-container {
       max-width: 600px;
       margin: 0 auto;
     }
+    /* Adjustments to ensure button stays at the bottom */
+    .movie-card .card-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%; /* Ensure card content fills the height */
+    }
   </style>
 </head>
 <body>
-    <%- include('_navbar') %>
-    <section class="section">
-      <div class="container">
-        <div class="columns is-vcentered is-flex is-align-items-stretch">
-          <div class="column is-one-third">
-            <figure class="image is-3by4">
-              <img src="https://via.placeholder.com/480x640" alt="Placeholder image">
-            </figure>
-          </div>
-          <div class="column">
-            <div class="card movie-card" style="height: 100%;">
+  <%- include('_navbar') %>
+  <section class="section">
+    <div class="container">
+      <div class="columns is-vcentered is-flex is-align-items-stretch">
+        <div class="column">
+          <div class="card movie-card">
+            <div class="columns is-gapless">
+              <div class="column is-one-quarter">
+                <div class="card-image">
+                  <figure class="image is-2by3" style="height: 100%; margin: 0;">
+                    <img src="<%= movie.img %>" alt="Placeholder image" style="object-fit: cover; height: 100%;">
+                  </figure>
+                </div>
+              </div>
+              <div class="column">
                 <div class="card-content">
-                  <div class="content" style="height: 100%;">
+                  <div class="content">
                     <div class="columns is-vcentered">
                       <div class="column">
-                        <p class="title is-4"><%= movie.title %>
-                        </p>
+                        <p class="title is-4"><%= movie.title %></p>
                       </div>
                       <div class="column is-one-third">
                         <div class="columns">
@@ -60,12 +67,11 @@
                         </div>
                       </div>
                     </div>
-                    <p>
-                      <% (movie.genre ?? []).forEach(genre => { %>
+    
+                      <% (movie.genre ? movie.genre.split(', ') : []).forEach(genre => { %>
                         <span class="tag is-dark"><%= genre %></span>
                       <% }) %>
                     </p>
-                    <p><strong><%= movie.year %></strong></p>
                     <% if (movie.rating) { %>
                       <p>
                         <span class="icon">
@@ -81,6 +87,10 @@
                         <strong>No rating</strong>
                       </p>
                     <% } %>
+                    <p>Year: <strong><%= movie.year %></strong></p>
+                    <p>Runtime: <strong><%= movie.runtime %> min</strong></p>
+                    <p>Director: <strong><%= movie.director %></strong></p>
+                    <p>Description: <strong><%= movie.description %></strong></p>
                   </div>
                   <div class="columns">
                     <div class="column">
@@ -93,10 +103,12 @@
                     </div>
                   </div>
                 </div>
+              </div>
             </div>
           </div>
         </div>
-        </div>
-    </section>
+      </div>
+    </div>
+  </section>
 </body>
 </html>
