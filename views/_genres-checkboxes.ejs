@@ -1,0 +1,14 @@
+<div class="field">
+    <label class="label">Genre</label>
+    <div class="control">
+      <% const genres = ['Action', 'Crime', 'Drama', 'Comedy', 'Thriller', 'Horror']; %>
+      <% genres.forEach(function(genre) { %>
+        <div class="control">
+          <label class="checkbox">
+            <input type="checkbox" name="genre" value="<%= genre %>" <%= checkedGenres.includes(genre) ? 'checked' : '' %>>
+            <%= genre %>
+          </label>
+        </div>
+      <% }); %>
+    </div>
+  </div>

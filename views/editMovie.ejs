@@ -18,14 +18,14 @@
   <section class="section">
     <div class="container form-container">
       <h1 class="title"><%= title %></h1>
-      <form action="/add" method="post">
-        <%- include('_movie-field', { label: 'Movie Title', type: 'text', name: 'title', placeholder: 'Movie Title', required: true, value: null }) %>
-        <%- include('_movie-field', { label: 'Director', type: 'text', name: 'director', placeholder: 'Director', required: true, value: null }) %>
-        <%- include('_movie-field', { label: 'Year', type: 'number', name: 'year', placeholder: 'Year', required: true, value: null }) %>
-        <%- include('_genres-checkboxes', { checkedGenres: [] }) %>
+      <form action="/update/<%= movie.id %>" method="post">
+        <%- include('_movie-field', { label: 'Movie Title', type: 'text', name: 'title', placeholder: 'Movie Title', value: movie.title, required: true }) %>
+        <%- include('_movie-field', { label: 'Director', type: 'text', name: 'director', placeholder: 'Director', value: movie.director, required: true }) %>
+        <%- include('_movie-field', { label: 'Year', type: 'number', name: 'year', placeholder: 'Year', value: movie.year, required: true }) %>
+        <%- include('_genres-checkboxes', { checkedGenres: movie.genre }) %>
         <div class="field">
           <div class="control">
-            <button class="button is-primary is-link" type="submit">Add Movie</button>
+            <button class="button is-primary is-link" type="submit">Update Movie</button>
           </div>
         </div>
       </form>

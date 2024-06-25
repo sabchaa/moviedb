@@ -138,7 +138,7 @@ app.get('/edit/:id', (req, res) => {
 	const movieId = Number(req.params.id);
   const movie = movies.find(m => m.id === movieId);
   if (movie) {
-    res.render('addMovie', {
+    res.render('editMovie', {
       title: `${movie.title}`,
       movie,
     });
@@ -146,6 +146,26 @@ app.get('/edit/:id', (req, res) => {
     res.status(404).send('Movie not found');
   }
 })
+
+app.post('/update/:id', (req, res) => {
+  const movieId = Number(req.params.id);
+  const title = String(req.body.title);
+  const director = String(req.body.director);
+  const year = Number(req.body.year);
+  const genre = Array.isArray(req.body.genre) ? req.body.genre : [req.body.genre];
+
+  const movieIndex = movies.findIndex(movie => movie.id === movieId);
+  if (movieIndex !== -1) {
+    movies[movieIndex] = {
+      ...movies[movieIndex],
+      title,
+      director,
+      year,
+      genre
+    };
+  }
+  res.redirect(`/movie/${movieId}`);
+});
 
 app.get('/delete/:id', (req, res) => {
   const movieId = Number(req.params.id)
