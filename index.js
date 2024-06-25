@@ -121,6 +121,42 @@ app.get('/addMovie', (req, res) => {
   });
 });
 
+app.get('/movie/:id', (req, res) => {
+  const movieId = Number(req.params.id);
+  const movie = movies.find(m => m.id === movieId);
+  if (movie) {
+    res.render('movie', {
+      title: `${movie.title}`,
+      movie,
+    });
+  } else {
+    res.status(404).send('Movie not found');
+  }
+});
+
+app.get('/edit/:id', (req, res) => {
+	const movieId = Number(req.params.id);
+  const movie = movies.find(m => m.id === movieId);
+  if (movie) {
+    res.render('addMovie', {
+      title: `${movie.title}`,
+      movie,
+    });
+  } else {
+    res.status(404).send('Movie not found');
+  }
+})
+
+app.get('/delete/:id', (req, res) => {
+  const movieId = Number(req.params.id)
+  const index = movies.findIndex((m) => m.id === movieId)
+
+  if (index !== -1) {
+    movies.splice(index, 1)
+  }
+  res.redirect('/')
+})
+
 app.listen(port, () => {
   console.log(`Server listening at http://localhost:${port}`);
 });
