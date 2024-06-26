@@ -39,14 +39,25 @@
 
     <div class="navbar-end">
         <div class="navbar-item">
-        <div class="buttons">
-            <a class="button is-dark" href="/signup">
-            <strong>Sign up</strong>
-            <a class="button is-link" href="/login">
-                Log in
-            </a>
-            </a>
-        </div>
+        <% if (user) { %>
+            <div class="buttons">
+            <%= user.name %>
+                <div class="buttons">
+                    <a class="button is-dark" href="/logout">
+                        Log out
+                    </a>
+                </div>
+            </div>
+            <% } else { %>
+                <div class="buttons">
+                    <a class="button is-dark" href="/signup">
+                    <strong>Sign up</strong>
+                    <a class="button is-link" href="/login">
+                        Log in
+                    </a>
+                    </a>
+                </div>
+            <% } %>
         </div>
     </div>
     </div>

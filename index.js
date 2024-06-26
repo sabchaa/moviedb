@@ -1,16 +1,66 @@
 import express from 'express';
-import knex from 'knex'
-import knexfile from './knexfile.js'
+import { db, createUser,  getUserByToken, getUser } from './src/db.js'
+import cookieParser from 'cookie-parser'
 
 const port = 3000;
 
 const app = express();
-const db = knex(knexfile)
 
 app.set('view engine', 'ejs');
 
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser())
+
+app.use(async (req, res, next) => {
+  const token = req.cookies.token;
+
+  if (token) {
+    res.locals.user = await getUserByToken(token);
+  } else {
+    res.locals.user = null;
+  }
+
+  next();
+});
+
+app.get('/signup', async (req, res) => {
+  res.render('signup')
+})
+
+app.post('/signup', async (req, res) => {
+  const name = String(req.body.name);
+  const password = String(req.body.password);
+
+  const user = await createUser(name, password)
+
+  res.cookie('token', user.token)
+
+  res.redirect('/')
+})
+
+app.get('/login', (req, res) => {
+  res.render('login');
+});
+
+app.post('/login', async (req, res) => {
+  const name = String(req.body.name);
+  const password = String(req.body.password);
+
+  const user = await getUser(name, password);
+
+  if (user) {
+    res.cookie('token', user.token);
+    res.redirect('/');
+  } else {
+    res.render('login', { error: 'Invalid username or password' });
+  }
+});
+
+app.get('/logout', (req, res) => {
+  res.clearCookie('token');
+  res.redirect('/');
+});
 
 app.get('/', async (req, res) => {
   const movies = await db('movies').select('*')
@@ -45,6 +95,9 @@ app.post('/add', async (req, res) => {
 });
 
 app.get('/addMovie', (req, res) => {
+  if (!res.locals.user) {
+    return res.redirect('/login');
+  }
   res.render('addMovie', {
     title: 'Add Movie',
   });
