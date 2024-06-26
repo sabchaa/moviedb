@@ -1,7 +1,10 @@
 export default {
-    client: 'sqlite3',
+  development: {
+    client: "sqlite3",
     connection: {
-      filename: './mydb.sqlite',
+      filename: "./mydb.sqlite",
     },
-    useNullAsDefault: true,
+    useNullAsDefault: false,
+    debug: false,
+  },
 }
