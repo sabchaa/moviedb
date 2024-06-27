@@ -1,0 +1,95 @@
+<% if (userId) { %>
+    <% if (userReview) { %>
+        <p>You have already submitted a review for this movie.</p>
+    <% } else { %>
+        <div class="section">
+            <h2 class="title is-4">Add Review</h2>
+            <form id="reviewForm" action="/movie/<%= movie.id %>/reviews" method="POST">
+                <div class="field">
+                    <label class="label">Rating (1-5)</label>
+                    <div class="control">
+                        <div class="stars" id="starRating">
+                            <span class="icon" data-value="1">
+                                <i class="far fa-star"></i>
+                            </span>
+                            <span class="icon" data-value="2">
+                                <i class="far fa-star"></i>
+                            </span>
+                            <span class="icon" data-value="3">
+                                <i class="far fa-star"></i>
+                            </span>
+                            <span class="icon" data-value="4">
+                                <i class="far fa-star"></i>
+                            </span>
+                            <span class="icon" data-value="5">
+                                <i class="far fa-star"></i>
+                            </span>
+                        </div>
+                        <input type="hidden" id="rating" name="rating" value="0" required>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Review</label>
+                    <div class="control">
+                        <textarea class="textarea" name="review_text" rows="5" required></textarea>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="control">
+                        <button class="button is-link" type="submit">Add review</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    <% } %>
+<% } else { %>
+    <p>Please <a href="/login">log in</a> to add a review.</p>
+<% } %>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+    const starRating = document.getElementById('starRating');
+    const stars = starRating.querySelectorAll('.icon');
+    const ratingInput = document.getElementById('rating');
+    const reviewForm = document.getElementById('reviewForm');
+
+    stars.forEach(star => {
+        star.addEventListener('mouseenter', () => {
+            const value = parseInt(star.getAttribute('data-value'));
+            highlightStars(value);
+        });
+
+        star.addEventListener('mouseleave', () => {
+            const value = parseInt(ratingInput.value);
+            highlightStars(value);
+        });
+
+        star.addEventListener('click', () => {
+            const value = parseInt(star.getAttribute('data-value'));
+            ratingInput.value = value;
+            highlightStars(value);
+        });
+    });
+
+    reviewForm.addEventListener('submit', (event) => {
+        const ratingValue = parseInt(ratingInput.value);
+        if (ratingValue < 1) {
+            event.preventDefault();
+            alert('Please provide a rating of at least 1 star.');
+        }
+    });
+
+    function highlightStars(value) {
+        stars.forEach(star => {
+            const starValue = parseInt(star.getAttribute('data-value'));
+            if (starValue <= value) {
+                star.querySelector('i').classList.remove('far');
+                star.querySelector('i').classList.add('fas', 'has-text-warning');
+            } else {
+                star.querySelector('i').classList.remove('fas', 'has-text-warning');
+                star.querySelector('i').classList.add('far');
+            }
+        });
+    }
+});
+</script>

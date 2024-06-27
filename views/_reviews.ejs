@@ -1,0 +1,38 @@
+<div class="section">
+    <h2 class="title is-4">Reviews</h2>
+    <% if (movie.reviews && movie.reviews.length > 0) { %>
+        <% movie.reviews.forEach(review => { %>
+            <article class="media">
+                <figure class="media-left">
+                    <p class="image is-48x48">
+                        <img src="/default-pfp.png" alt="User image">
+                    </p>
+                </figure>
+                <div class="media-content">
+                    <div class="content">
+                        <strong><%= review.user_name %></strong>
+                        <div class="stars">
+                            <% for (let i = 1; i <= 5; i++) { %>
+                                <% if (i <= review.rating) { %>
+                                    <span class="icon has-text-warning">
+                                        <i class="fas fa-star"></i>
+                                    </span>
+                                <% } else { %>
+                                    <span class="icon">
+                                        <i class="far fa-star"></i>
+                                    </span>
+                                <% } %>
+                            <% } %>
+                        </div>
+                        <p><%= review.review_text %></p>
+                    </div>
+                </div>
+                <div class="media-right">
+                    <small><%= new Date(review.created_at).toLocaleString() %></small>
+                </div>
+            </article>
+        <% }) %>
+    <% } else { %>
+        <p>No reviews yet.</p>
+    <% } %>
+</div>

@@ -2,6 +2,7 @@ import { db } from "../db.js"
 import { Router } from "express"
 import { requiresAuth } from "../middlewares/requiresAuth.js"
 import { doesMovieBelongToUser } from "../middlewares/doesMovieBelongToUser.js"
+import { updateMovieRating } from "../reviews.js"
 
 export const moviesRouter = new Router()
 
@@ -37,12 +38,25 @@ moviesRouter.post('/add', async (req, res) => {
     });
   });
   
-  moviesRouter.get('/movie/:id', async (req, res) => {
+  moviesRouter.get('/movie/:id', async (req, res, next) => {
     const movieId = Number(req.params.id);
-    const movie = await db('movies').select('*').where('id', movieId).first();
 
-    if (movie) {
+    try {
+        // Fetch movie details
+        const movie = await db('movies').select('*').where('id', movieId).first();
+
+        if (!movie) {
+            return res.status(404).send('Movie not found');
+        }
+
         const userId = res.locals.user ? res.locals.user.id : null;
+
+        // Fetch reviews for the movie
+        const reviews = await db('reviews')
+            .select('reviews.*', 'users.name as user_name')
+            .join('users', 'reviews.user_id', 'users.id')
+            .where('reviews.movie_id', movieId);
+
         const inWatchlist = await db('watchlist')
             .where({
                 user_id: userId,
@@ -50,14 +64,27 @@ moviesRouter.post('/add', async (req, res) => {
             })
             .first();
 
+        // Check if user has already submitted a review
+        const userReview = userId ? await db('reviews')
+            .where({
+                user_id: userId,
+                movie_id: movieId
+            })
+            .first() : null;
+
+        // Include reviews in the movie object
+        movie.reviews = reviews;
+
         res.render('movieDetail', {
             title: `${movie.title}`,
             movie,
             inWatchlist: !!inWatchlist,
-            userId
+            userId,
+            userReview
         });
-    } else {
-        res.status(404).send('Movie not found');
+    } catch (err) {
+        console.error('Error fetching movie details:', err);
+        next(err);
     }
 });
   
@@ -179,4 +206,26 @@ moviesRouter.get('/myMovies', requiresAuth, async (req, res) => {
         title: 'My Movies',
         movies: moviesWithWatchlistInfo
     });
+});
+
+moviesRouter.post('/movie/:id/reviews', requiresAuth, async (req, res, next) => {
+  const movieId = Number(req.params.id);
+  const { rating, review_text } = req.body;
+  const userId = res.locals.user.id;
+
+  try {
+      const newReview = await db('reviews').insert({
+          movie_id: movieId,
+          user_id: userId,
+          rating,
+          review_text
+      }).returning('*');
+
+      await updateMovieRating(db, movieId);
+      res.redirect(`/movie/${movieId}`);
+
+  } catch (err) {
+      console.error('Error creating review:', err);
+      next(err);
+  }
 });

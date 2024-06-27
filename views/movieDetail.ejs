@@ -47,12 +47,12 @@
                 <span class="tag is-dark"><%= genre %></span>
               <% }) %>
               </p>
-              <% if (movie.rating) { %>
+              <% if (movie.rating) { %> 
                 <p>
                   <span class="icon">
                     <i class="fas fa-star" style="color: #FFD43b"></i>
                   </span>
-                  <strong><%= movie.rating %></strong>
+                  <strong><%= movie.rating %></strong> (<%= movie.reviews.length %> reviews)
                 </p>
               <% } else { %>
                 <p>
@@ -78,3 +78,5 @@
     </div>
   </div>
 </div>
+<%- include('_reviews') %>
+<%- include('_addReview') %>
