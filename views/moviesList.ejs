@@ -1,0 +1,26 @@
+<div class="level">
+  <div class="level-left">
+  <div class="level-item">
+    <h1 class="title"><%= title %></h1>
+  </div>
+</div>
+<% if (locals.user) { %>
+  <div class="level-right">
+  <div class="level-item">
+    <a href="/addMovie">
+      <button class="button is-light is-fullwidth">
+        <span class="icon is-small">
+          <i class="fas fa-plus"></i>
+        </span>
+        <span>Add movie</span>
+      </button>
+    </a>
+  </div>
+  </div>
+<% } %>
+</div>
+<div class="columns is-multiline">
+  <% movies.forEach(movie => { %>
+    <%- include('_movieCard', { movie: movie }) %>
+  <% }) %>
+</div>

@@ -1,0 +1,8 @@
+<form action="/toggleWatchlist/<%= id %>" method="POST">
+    <button type="submit" class="button <%= inWatchlist ? 'is-link' : 'is-focused' %> is-fullwidth">
+        <span><%= inWatchlist ? 'Watchlist' : 'Watchlist' %></span>
+        <span class="icon is-small">
+            <i class="<%= inWatchlist ? 'fas' : 'far' %> fa-bookmark"></i>
+        </span>
+    </button>
+</form>
